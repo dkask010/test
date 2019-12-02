@@ -1,0 +1,880 @@
+﻿조별 1차 프로젝트 님과 카카오톡 대화
+저장한 날짜 : 2019-11-27 11:05:26
+
+--------------- 2019년 10월 15일 화요일 ---------------
+[권병준] [오후 2:50] https://github.com/kwonbj38/holiday
+[권병준] [오후 2:50] 오늘 작업한거 올렸어요 확인부탁드립니다
+[신지연] [오후 2:50] 네!
+[하동민] [오후 2:52] 0점이에요
+[신지연] [오후 2:52] http://aquerytool.com/
+[신지연] [오후 2:52] 공유!
+[신지연] [오후 2:52] 이런게 있대요
+[하동민] [오후 3:11] 이게뭐에요..?
+[동긔] [오후 3:16] https://test-8a14d.firebaseapp.com/
+[동긔] [오후 3:52] https://github.com/justyou78/GlobalIT_Pro
+[동긔] [오후 3:52] 로그인 폴더랑 세션 폴더입니다.
+--------------- 2019년 10월 16일 수요일 ---------------
+[권병준] [오후 2:10] 혹시
+[권병준] [오후 2:10] 노현태선생님
+[권병준] [오후 2:10] 연락처있어요?
+[신지연] [오후 2:11] 노현태 강사님
+01031201398a@gmail.co
+[신지연] [오후 2:11] 여기에 숫자가 폰번호에여
+[권병준] [오후 2:12] 감사합니다
+[동긔] [오후 5:12] https://git-scm.com/downloads
+[신지연] [오후 5:13] https://desktop.github.com/
+[신지연] [오후 5:53] 폴더 올리는거 모르겠고... 
+
+[신지연] [오후 5:54] 그래서 우선 그냥 다 올림요..
+[신지연] [오후 5:54] https://github.com/jiyeon0320/GlobalIT_holiday
+--------------- 2019년 10월 17일 목요일 ---------------
+[신지연] [오전 9:46] 우리 오늘 오후에 어디까지 햇는지 공유하고 
+어떻게 더 진행할건지 회의 한번 할까여-
+[신지연] [오전 9:47] 내일 각자 한거 한번 합쳐보고요
+[신지연] [오전 9:47] 다음주에 어디까지 진행할건지 플랜도 짤겸
+[권병준] [오전 9:47] 네넴
+[동긔] [오전 11:05] 
+<%@page import="globalit_pro.example.dto.MemberDTO"%>
+<%@page import="globalit_pro.example.dao.MemberDAO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+   pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+<html>
+<head>
+
+
+<meta charset="utf-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1">
+   <title>Insert title here</title>
+</head>
+<body>
+   <%
+      request.setCharacterEncoding("UTF-8");
+   %>
+   <jsp:useBean id="member" class="globalit_pro.example.dto.MemberDTO"></jsp:useBean>
+   <jsp:setProperty property="*" name="member" />
+   
+   <%
+   
+      MemberDAO dao = new MemberDAO();
+   
+      //카카오 로그인
+      String export_email = request.getParameter("export_email");
+      String export_nickname = request.getParameter("export_nickname");
+      String export_id= request.getParameter("export_id");
+      String where= request.getParameter("where");
+   
+      System.out.println(export_email+"test");
+      System.out.println(export_nickname+"test");
+      
+      
+      if(export_email != "" || export_nickname != ""){
+         System.out.println("진입");
+            //로그인 과정
+            String st = "";
+            if(export_email ==null){
+               export_email ="refuse";
+            }
+            
+            
+            System.out.println(where);
+            System.out.println(st);
+            System.out.println(export_nickname);
+            System.out.println(export_id);
+            
+            
+            
+            
+            //db에 저장되어있지 않다면 저장
+            if(!dao.duplicateID(st)){
+               System.out.println("진입");
+               dao.exportJoin(export_id+"!"+export_email, export_nickname,where,export_id);
+               
+            }
+            String auto = request.getParameter("auto");
+            if (auto != null && auto.equals("on")) {
+               Cookie c = new Cookie("id", st);
+               c.setMaxAge(60 * 60 * 24);
+               response.addCookie(c);
+               
+            }
+            // 각 페이지별 로그인이 되었는지 확인하기 위한 세션 설정.
+            session.setAttribute("id", export_id+"!"+export_email);
+            
+            %> 
+            <script>
+                  alert("<%=export_nickname%>님 환영합니다.");
+                  window.location.href = 'main.jsp';
+            </script>
+            <%
+            
+         
+         
+            return;
+         
+      }
+      
+      
+      
+      
+      
+      
+      //로그인 성공
+      if (new MemberDAO().checkLogin(member)) {
+         //자동로그인을 위한 쿠키 설정.
+         String auto = request.getParameter("auto");
+         if (auto != null && auto.equals("on")) {
+            Cookie c = new Cookie("id", member.getId());
+            c.setMaxAge(60 * 60 * 24);
+            response.addCookie(c);
+            
+         }
+         // 각 페이지별 로그인이 되었는지 확인하기 위한 세션 설정.
+         session.setAttribute("id", member.getId());
+         MemberDTO getMember=dao.getUser(member.getId());
+   %>
+   <script>
+         alert("<%=getMember.getName()%>님 환영합니다.");
+      window.location.href = 'main.jsp';
+   </script>
+
+   <%
+      } else {
+         out.print("<script> alert('잘못된 정보를 입력하셨습니다.')</script>");
+         out.print("<script> history.go(-1);</script>");
+      }
+   %>
+   
+   
+   
+
+
+   
+   
+   
+</body>
+</html>
+[하동민] [오전 11:51] 네
+[하동민] [오전 11:52] <!DOCTYPE html>
+<html>
+<head>
+<meta charset="EUC-KR">
+<title>매뉴</title>
+<style type="text/css">
+   nav{margin: 10px;}
+   nav ul{list-style: none; text-align: center; border-top: 1px solid red; border-bottom:
+   1px solid red; padding: 10px 0;}
+   nav ul li{ display: inline; padding: 0 10px;}
+   nav ul li a{ text-decoration: none; color: black;}
+   nav ul li a:hover{ text-decoration: underline;}
+   
+ </style>
+</head>
+<body>
+   <nav>
+   <ul>
+      <li><a href="index.jsp">사이트 안내</a></li>
+      <li><a href="../intro_room.jsp">방 소개</a></li>
+      <li><a href="board/list.jsp">커뮤니티</a></li>
+      <li><a href="index.jsp">주변시설</a></li>
+   </ul>
+   </nav>
+</body>
+</html>
+[하동민] [오후 12:02] <%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<html>
+<head>
+   <meta charset="utf-8"/>
+   <title>오시는길</title>
+</head>
+<body>
+   <div id="map" style="width:1250px;height:400px;"></div>
+   <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=c7ba72873490200e7d1ddfa2d1e1db8f"></script>
+   <script>
+      var container = document.getElementById('map');
+      var options = {
+         center: new kakao.maps.LatLng(33.450701, 126.570667),
+         level: 3
+      };
+      var map = new kakao.maps.Map(container, options);
+   </script>
+   <h3>01. 기본정보</h3>
+   <p>인천광역시 강화군 송해면 하도리 751-11 (하도리 738번지) 라스텔라펜션
+   010-4097-2628 </p> <br /> 
+   
+   <h3>02. 자가용 이용시</h3>
+   <p>- 서울방면
+   서울을 기점으로 경부고속도로 끝지점에서 올림픽대로 김포공항쪽, 경부고속도로 끝지점에서
+   올림픽대로 김포공항방면, 서울외곽순환도로 김포 나들목에서 강화도를 연결하는 48번 국도를 이용
+   올림픽도로 끝지점에서 강화 - 철산간 48번 도로 시작점에 접어드는 경우와 김포한강로를 이용할 수 있습니다. </p> 
+   
+   <p>- 김포공항방면
+   김포공항(올림픽대로 끝지점)에서 강화읍까지 40분 ~ 1시간정도 소요됩니다.
+   인천에서는 경인고속도로 서인천 나들목에서 김포방면으로 검단, 양곡, 김포, 강화 순으로 이정표도 잘 되어 있고, 도로도 좋은편이라 쉽게 찾아올수있습니다. </p> <br />
+   
+   <h3>03. 대중교통 이용시</h3>
+   <p>1. 신촌터미널 - 강화터미널 (직행) 약 1시간30분 소요 (3000번)
+   운행시간 : 5시40분 ~ 21시 30분(10~15분 간격)
+   탑승위치 : 신촌로터리에서 서강대교 방면으로 약 400m거리에 있음(청해수산 앞) - 지하철2호선 신촌역 7번 출구로 나오신 후 서강대교 쪽 약 100m지점에 강화행 시외버스탑승 - 강화터미널에서 하차 
+   경유장소 : 신촌 - 김포공항(송정 지하철역) - 고촌 - 김포터미널 - 마송 - 강화 </p> 
+   
+   <h3>2. 인천/경기방면(인천/부천)</h3>
+   <p>운행시간 : 6시 ~ 9시 30분 (20분 간격)
+   탑승위치 : 중동LG아파트 앞 터미널
+   경유장소 : 부천 - 소사(해진부패앞) - 부평(시장앞) - 계산동(홍진아파트) - 서인천고 - 서구청 - 검단4거리 - 마송 - 강화
+   700번버스 : 인천종합터미널(신세계백화점 앞) - 길병원 - 희망백화점 - 간석오거리 - 동암역 - 가좌지주아파트 - 석남동(거북시장) - 형광아파트(가정오거리) - 강화대교 넘어서 하차 </p> 
+   
+   <h3>3. 영등포 - 강화터미널(완행)</h3>
+   <p>영등포 신세계 백화점 맞은편 약 120m 아래 고가차도 부근 (약 1시간 40분 소요) </p> 
+   
+   <h3>4. 부평 - 강화터미널(완행)</h3>
+   <p>부평북부역 90번(약 1시간 40분 소요) </p> 
+   
+   <h3>5. 부천터미널 - 강화터미널 (직행)</h3>
+   <p>중동 LG아파트 앞 터미널 33번 (약 2시간 소요)</p>
+</body>
+</html>
+[하동민] [오후 12:02] 이이잉 앗살라말라이꿈
+[신지연] [오후 12:02] ?
+--------------- 2019년 10월 28일 월요일 ---------------
+[권병준] [오전 9:31] 오토바이가 고장나서 수리중이예요
+[권병준] [오전 9:31] 오후에갈께요ㅠ
+[신지연] [오전 9:32] ㅋㅋㅋㅋㅋㅋㅋㅋㅋ 알겠어요. 나 빼곤 아무도 오지 않았다....
+[권병준] [오전 9:32] ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+[하동민] [오전 9:32] 저 1층입니다 누나~~~~
+[신지연] [오전 9:33] 네 ㅋㅋ 알겠어요 ㅋㅋ
+[신지연] [오후 1:43] public int checkStats(ReservationDTO dto) { // 년월일, 방번호로 stats 검색 해서 x값으로 돌려줌
+      int x = 1;          // x값이 0일경우 예약불가능 // 1일경우 예약가능 // 2일경우 예약진행중
+      try {
+         conn = getConnection();
+         String sql = "select stats from reservation where year=? and month=? and day=? and room_num=?";
+         pstmt = conn.prepareStatement(sql);
+         pstmt.setInt(1, dto.getYear());
+         pstmt.setInt(2, dto.getMonth());
+         pstmt.setInt(3, dto.getDay());
+         pstmt.setInt(4, dto.getRoom_num());
+         rs = pstmt.executeQuery();
+         if(rs.next()) {
+            x = rs.getInt("stats");
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         if(rs!=null){try{rs.close();}catch(SQLException e){e.printStackTrace();}}
+         if(pstmt!=null){try{pstmt.close();}catch(SQLException e){e.printStackTrace();}}
+         if(conn!=null){try{conn.close();}catch(SQLException e){e.printStackTrace();}}
+      }
+      return x;
+   }
+[신지연] [오후 1:45] public int checkStats(int year, int month, int day, int room_num) { // 년월일, 방번호로 stats 검색 해서 x값으로 돌려줌
+      int x = 1;          // x값이 0일경우 예약불가능 // 1일경우 예약가능 // 2일경우 예약진행중
+      try {
+         conn = getConnection();
+         String sql = "select stats from reservation where year=? and month=? and day=? and room_num=?";
+         pstmt = conn.prepareStatement(sql);
+         pstmt.setInt(1, year);
+         pstmt.setInt(2, month);
+         pstmt.setInt(3, day);
+         pstmt.setInt(4, room_num);
+         rs = pstmt.executeQuery();
+         if(rs.next()) {
+            x = rs.getInt("stats");
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         if(rs!=null){try{rs.close();}catch(SQLException e){e.printStackTrace();}}
+         if(pstmt!=null){try{pstmt.close();}catch(SQLException e){e.printStackTrace();}}
+         if(conn!=null){try{conn.close();}catch(SQLException e){e.printStackTrace();}}
+      }
+      return x;
+   }
+[신지연] [오후 2:11] String sql ="select num, pw, title, content, time, id, filename, notice, r "
+               + "from (select num, pw, title, content, time, id, filename, notice, rownum r "
+               + "from(select * from board where notice=0 order by num desc) order by num desc)where notice=0 and r >= ? and r <= ?";
+[하동민] [오후 2:56] <%@page import="web.holiday.reservation.ReservationDTO"%>
+<%@page import="java.util.List"%>
+<%@page import="web.holiday.reservation.ReservationDAO"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8"
+    pageEncoding="UTF-8"%>
+<!DOCTYPE html>
+
+<html>
+<head>
+<meta charset="UTF-8">
+<title>매출관리</title>
+</head>
+<%
+   ReservationDAO dao = new ReservationDAO();
+   List<ReservationDTO> list = dao.selectAll();   
+%>
+
+<body>
+<%
+for(int i = 1; i <= 12; i++){%>
+<table border="2" bordercolor="green" width="900" height="30" align="center">
+      <tr bgcolor="blue" align="center">
+         <p><td colspan="4" span style="color:white"><%=i %>월 매출관리표</td></p>
+      </tr>
+      <tr>
+         <td>아이디</td>
+         <td>예약날짜</td>
+         <td>방번호</td>
+         <td>금액</td>
+      </tr>
+<%
+   for(ReservationDTO dto : list){%>
+      <%if(i == dto.getMonth()){ %>
+      <tr>
+         <td><%=dto.getId() %></td>
+         <td><%=dto.getYear() %>-<%=dto.getMonth() %>-<%=dto.getDay() %></td>
+         <td><%=dto.getRoom_num() %></td>
+         <td><%=dto.getMoney() %></td>
+      </tr>
+      <%} %>
+<%   }
+   
+%>
+</table>
+   
+<%}
+%>
+</body>
+</html>
+[권병준] [오후 5:10] public List<ReservationDTO> selectAll() { //id로 모든정보 검색 날짜정렬
+      List<ReservationDTO> list = null;
+      try {
+         conn = getConnection();
+         String sql = "select * from reservation order by year, month, day";
+         pstmt = conn.prepareStatement(sql);
+         rs = pstmt.executeQuery();
+         list = new ArrayList<ReservationDTO>();
+         while(rs.next()) {
+            ReservationDTO member = new ReservationDTO();
+            member.setMoney(rs.getInt("money"));
+            member.setYear(rs.getInt("year"));
+            member.setMonth(rs.getInt("month"));
+            member.setDay(rs.getInt("day"));
+            member.setId(rs.getString("id"));
+            member.setStats(rs.getInt("stats"));
+            member.setRoom_num(rs.getInt("room_num"));
+            list.add(member);
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         if(rs!=null){try{rs.close();}catch(SQLException e){e.printStackTrace();}}
+         if(pstmt!=null){try{pstmt.close();}catch(SQLException e){e.printStackTrace();}}
+         if(conn!=null){try{conn.close();}catch(SQLException e){e.printStackTrace();}}         
+      }
+      return list;
+   }
+--------------- 2019년 10월 29일 화요일 ---------------
+[하동민] [오전 9:12] 저 오전에 병원에 들렀다가 갈게요!! 감기가 너무 오래가네요 ㅠㅠ 다들 감기조심하세요!!!!!(아픔)
+[신지연] [오전 9:13] 알겠어요-!
+[신지연] [오후 2:19] 게시판 댓글
+co_insertPro
+
+<script>location="../display/header.jsp?pgName=boardView&num=<%=num%>&pageNum=<%=pageNum%>"</script>
+
+
+공지사항 댓글
+document.location.href="../display/header.jsp?pgName=noticeView&num=<%=num%>&pageNum=<%=pageNum%>";
+[신지연] [오후 2:26] 댓글 관련 파일 올렸고, 
+notice 붙은 파일은 공지사항에 달린 댓글 파일이에요
+혹시 댓글 파일만으로도 안되면 
+[신지연] [오후 2:27] notice 붙인 파일 쓰면 됩니다
+[동긔] [오후 2:45] 넹 ㅎㅎ
+[동긔] [오후 2:45] 감사합니다 ㅎ
+[신지연] [오후 2:52] //댓글 삭제
+   public int coDelete(int co_num) throws Exception{
+      int x = -1;   //삭제 성공하면 1, 실패하면 0
+      
+      try {
+         conn = getConnection();
+         pstmt = conn.prepareStatement("delete from board_comment where co_num=?");
+         pstmt.setInt(1, co_num);
+         pstmt.executeUpdate();
+         
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         if(pstmt != null) try {pstmt.close();} catch(SQLException s) {s.printStackTrace();}
+         if(conn != null) try {conn.close();} catch(SQLException s) {s.printStackTrace();}                     
+      }
+      return x;
+   }
+--------------- 2019년 10월 30일 수요일 ---------------
+[신지연] [오후 2:23] 삭제 권한 유효성 검사
+수정한 부분만 긁어서 보내줄까요? 
+아니면 파일 통째로 올릴까요
+[신지연] [오후 2:32] 드라이브에
+삭제 권한 검사
+라는 메모장 파일로 올렸어요
+[신지연] [오후 2:45] public int checkStats(int year, int month, int day, int room_num) { // 년월일, 방번호로 stats 검색 해서 x값으로 돌려줌
+      int x = 1;          // x값이 0일경우 예약불가능 // 1일경우 예약가능 // 2일경우 예약진행중
+      try {
+         conn = getConnection();
+         String sql = "select stats from reservation where year=? and month=? and day=? and room_num=?";
+         pstmt = conn.prepareStatement(sql);
+         pstmt.setInt(1, year);
+         pstmt.setInt(2, month);
+         pstmt.setInt(3, day);
+         pstmt.setInt(4, room_num);
+         rs = pstmt.executeQuery();
+         if(rs.next()) {
+            x = rs.getInt("stats");
+         }
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {
+         if(rs!=null){try{rs.close();}catch(SQLException e){e.printStackTrace();}}
+         if(pstmt!=null){try{pstmt.close();}catch(SQLException e){e.printStackTrace();}}
+         if(conn!=null){try{conn.close();}catch(SQLException e){e.printStackTrace();}}
+      }
+      return x;
+   }
+[신지연] [오후 2:59] 동규씨 
+삭제 관련된거 수정된거 있는데 그거 할 차례 되면 나 불러줘요
+[동긔] [오후 3:00] 넹 ㅎ
+[신지연] [오후 3:25]       
+<%   } else if(id.equals("admin")) {
+      System.out.println("게시판 지우기 프로 : idddd : "+id);
+      dao.delete(num);   %>
+   <meta http-equiv="Refresh" content="0;url=../display/header.jsp?pgName=board">   
+      
+      
+<%   } else {%>
+[신지연] [오후 3:26] document.location.href="../board/boardDeletePro.jsp?num=<%=vo.getNum()%>&pageNum=<%=pageNum%>";
+[신지연] [오후 3:34] <%   } else if(id.equals("admin")) {
+      System.out.println("게시판 지우기 프로 : idddd : "+id);
+      dao.delete(num);   %>
+   <meta http-equiv="Refresh" content="0;url=../display/header.jsp?pgName=board">   
+      
+      
+<%   } else {%>
+--------------- 2019년 10월 31일 목요일 ---------------
+[하동민] [오전 12:34] 감사합니다~~
+[신지연] [오전 9:27] 이번엔 내가 감기다ㅜㅜ
+병원 들렸다 오전 중에 갈게요!
+[권병준] [오전 9:27] 아이고
+[하동민] [오전 9:27] 알겠습니다!! 있다뵈요!!!
+[권병준] [오전 11:18] <%if(cal.get(Calendar.DATE) == date){%>
+                  <a href="bookingCal.jsp?year=<%=cal.get(Calendar.YEAR)%>&month=<%=cal.get(Calendar.MONTH)+1%>&day=<%=cal.get(Calendar.DATE)%>" class="dd"><%=cal.get(Calendar.DATE) %></a>
+            <%}else{%>
+                  <a href="bookingCal.jsp?year=<%=cal.get(Calendar.YEAR)%>&month=<%=cal.get(Calendar.MONTH)+1%>&day=<%=cal.get(Calendar.DATE)%>"><%=cal.get(Calendar.DATE) %></a>
+            <%}
+[권병준] [오전 11:20] public void delete(int room_num, int year, int month, int day) { //방번호 날짜로 데이터삭제
+      try {
+         conn = getConnection();
+         String sql = "delete from reservation where room_num=? and year=? and month=? and day=?";
+         pstmt = conn.prepareStatement(sql);
+         pstmt.setInt(1, room_num);
+         pstmt.setInt(2, year);
+         pstmt.setInt(3, month);
+         pstmt.setInt(4, day);
+         pstmt.executeUpdate();
+      } catch (Exception e) {
+         e.printStackTrace();
+      } finally {         
+         if(rs!=null){try{rs.close();}catch(SQLException e){e.printStackTrace();}}
+         if(pstmt!=null){try{pstmt.close();}catch(SQLException e){e.printStackTrace();}}
+         if(conn!=null){try{conn.close();}catch(SQLException e){e.printStackTrace();}}         
+      }
+   }
+[권병준] [오후 1:52] <%if(id.equals("admin")){%>
+               <td><button onclick="location='../admin/boardAdminPro.jsp?num=<%= number %>'">삭제</button></td>
+            <%} %>
+[하동민] [오후 2:07] http://localhost:8080/holiday/display/header.jsp
+[권병준] [오후 2:11] http://192.168.0.17:8080/holiday/display/header.jsp?pgName=main_Slide
+[신지연] [오후 4:56] **********bookingForm_02.jsp
+
+
+ 
+    /* 1번방 : 페가수스에서 머물 때  */
+    function select1(){   
+       var stayDay1 = document.getElementById('stayDay1').value;   //숙박기간
+       var fee1 = document.getElementById('fee1').value;         // 이용요금
+       var adult1 = document.getElementById('adult1');      //성인 인원수
+       var adultVal = adult1.options[adult1.selectedIndex].value;
+       var plusFee1;
+      if(adultVal > 15){
+         for(var i = 15; i < adultVal; i++){
+            plusFee1 = (adultVal-15)*10000;
+         }
+      } else{
+         plusFee1 = 0;
+      }
+       
+       price1 = stayDay1 * fee1 + plusFee1;   //숙박기간 * 이용요금 = 값
+       document.getElementById("money1").value = price1;    
+       totalPrice();
+    }
+    
+    
+    /* 2번방 : 오리온에서 머물 때 */
+     function select2(){
+       var stayDay2 = document.getElementById('stayDay2').value;
+       var fee2 = document.getElementById('fee2').value;
+       var adult2 = document.getElementById('adult2');      //성인 인원수
+       var adultVal = adult1.options[adult2.selectedIndex].value;
+       var plusFee2;
+      if(adultVal > 10){
+         for(var i = 10; i < adultVal; i++){
+            plusFee2 = (adultVal-10)*10000;
+         }
+      } else{
+         plusFee2 = 0;
+      }
+      
+       price2 = stayDay2 * fee2 + plusFee2;
+       document.getElementById('money2').value = price2;
+       totalPrice();
+    }
+    
+     /* 3번방 : 카시오페아에서 머물 때 */
+     function select3(){
+        var stayDay3 = document.getElementById('stayDay3').value;
+        var fee3 = document.getElementById('fee3').value;
+        var adult3 = document.getElementById('adult3');      //성인 인원수
+       var adultVal = adult1.options[adult3.selectedIndex].value;
+       var plusFee3;
+      if(adultVal > 10){
+         for(var i = 10; i < adultVal; i++){
+            plusFee3 = (adultVal-10)*10000;
+         }
+      } else{
+         plusFee3 = 0;
+      }
+      
+        price3 = stayDay3 * fee3 + plusFee3;
+        document.getElementById('money3').value = price3;
+        totalPrice();
+     }
+    
+    
+     
+    /* 전체 요금 */
+    function totalPrice(){
+       
+       
+          //방1
+          var stayDay1 = document.getElementById('stayDay1').value;
+          var fee1 = document.getElementById('fee1').value;
+          var adult1 = document.getElementById('adult1');      //성인 인원수
+          var adultVal = adult1.options[adult1.selectedIndex].value;
+          var plusFee1;
+         if(adultVal > 15){
+            for(var i = 15; i < adultVal; i++){
+               plusFee1 = (adultVal-15)*10000;
+            }
+         } else{
+            plusFee1 = 0;
+         }
+         
+          console.log(stayDay1);
+          console.log(fee1);
+          
+          if(room1.checked){
+             price1 = stayDay1 * fee1 + plusFee1;
+          }
+          else{
+             price1 = 0;
+          }
+          
+          
+          //방2
+          var stayDay2 = document.getElementById('stayDay2').value;
+          var fee2 = document.getElementById('fee2').value;
+          var adult2 = document.getElementById('adult2');      //성인 인원수
+          var adultVal = adult2.options[adult2.selectedIndex].value;
+          var plusFee2;
+         if(adultVal > 10){
+            for(var i = 10; i < adultVal; i++){
+               plusFee2 = (adultVal-10)*10000;
+            }
+         } else{
+            plusFee2 = 0;
+         }
+          console.log(stayDay2);
+          console.log(fee2);
+          
+         if(room2.checked){
+            price2 = stayDay2 * fee2 + plusFee2;
+          }
+          else{
+             price2 = 0;
+          }
+          //방3
+          var stayDay3 = document.getElementById('stayDay3').value;
+          var fee3 = document.getElementById('fee3').value;
+          var adult3 = document.getElementById('adult3');      //성인 인원수
+          var adultVal = adult3.options[adult3.selectedIndex].value;
+          var plusFee3;
+         if(adultVal > 10){
+            for(var i = 10; i < adultVal; i++){
+               plusFee3 = (adultVal-10)*10000;
+            }
+         } else{
+            plusFee3 = 0;
+         }
+          console.log(stayDay3);
+          console.log(fee3);
+          
+          if(room3.checked){
+             price3 = stayDay3 * fee3 + plusFee3;
+          } else{
+             price3 = 0;
+          }
+       
+          document.getElementById('totalMoney').value = (price1+price2+price3);      
+   
+    }//totalPrice()
+[신지연] [오후 4:56] 수정할 때 저 불러줘요
+--------------- 2019년 11월 1일 금요일 ---------------
+[신지연] [오전 8:52] 오늘도 늦게 가여ㅜ 
+제대로 병남요 ㅎㅎ 
+오후에 출근할게요!!
+[권병준] [오전 8:52] ㅠㅠ
+[하동민] [오전 8:53] 알겠습니다 ㅜㅜ
+--------------- 2019년 11월 5일 화요일 ---------------
+[하동민] [오전 8:47] 저 일이생겨서
+오후에 출근하겠습니다!!
+[권병준] [오전 8:53] 넴
+[신지연] [오전 9:02] 넴
+[신지연] [오전 10:33] 관리자 페이지에
+[신지연] [오전 10:33] 게시판 관리중.
+[신지연] [오전 10:33] 공지사항은 없는데
+[신지연] [오전 10:33] 이거 그냥 고?
+[권병준] [오전 11:49] 있어요 공지사항
+[권병준] [오전 11:49] 동민이꺼에 추가해둠
+[신지연] [오후 12:00] 아ㅏ아 동민이가 최종파일 갖고 있군!
+[신지연] [오후 12:00] 우리 오늘 피피티 고?
+[권병준] [오후 12:00] 네넵
+[신지연] [오후 12:00] 오후에 진행합시다 옙
+[하동민] [오후 12:50] 네네 오늘해요!
+[신지연] [오후 3:06] file:///C:/Users/JiYeon/Desktop/선생님거파일/10.project/프로젝트%20포트폴리오%20작성%20참고자료.pdf
+[신지연] [오후 4:19] 우리 테이블 FACILITY 하고 또 더 만든거 있어요?
+[권병준] [오후 4:19] 없어영
+[신지연] [오후 4:20] 오키
+[권병준] [오후 4:51] https://docs.google.com/presentation/d/1j4hiAfBcspUw9N4PUPa4Gkv-ACEK2G6Pg-RXlSEc0lw/edit?usp=sharing
+[권병준] [오후 5:36] http://192.168.0.19:8080/holiday/display/header.jsp
+[신지연] [오후 5:36] 감사감사 ㅋㅋㅋ 됐어여
+--------------- 2019년 11월 6일 수요일 ---------------
+[신지연] [오전 10:13] <meta http-equiv="Refresh" content="0;url=../display/header.jsp?pgName=board">
+[권병준] [오후 12:08] https://docs.google.com/presentation/d/1URRPLdGPrBGZKkR2mHCUjY1Rr-c2n8l5eJ1ARHPXu8E/edit?usp=sharing
+[권병준] [오후 12:08] 프레젠테이션 링크에요 
+[권병준] [오후 12:08] 확인해주세요~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+[신지연] [오후 1:40] 우리 PPT에 자기가 한 부분 핵심 코드도 해야해요!
+[권병준] [오후 1:40] 넴
+[신지연] [오후 1:46] 근데.. 게시판의 핵심코드가 뭐라고 생각함?
+[동긔] [오후 1:48] 누나가 어려워했던 부분이나 보여주고싶은 코드하면 될거같은뎅 ㅎ
+[하동민] [오후 1:48] 저는요
+[하동민] [오후 1:49] 구렌나루 엄청긁으면서 코드찾아봤는데
+[하동민] [오후 1:49] 너무쉬운것만해서그런지 없어요
+[동긔] [오후 1:49] 형은 api지도나 방만들어서 불러오는 과정같은거 하면 될거같아요
+[하동민] [오후 2:15] 공유문서함 제이름 ppt폴더에 카카오맵.jpg 파일 올려놨어요~
+[신지연] [오후 2:15] 공유문서함에 holiday1 이름으로 주요코드 캡쳐한거 올렸어요
+[신지연] [오후 3:29] holiday1 이름으로 주요코드 수정됐어요.
+[신지연] [오후 3:30] 샘께서 주석처리가 안되어있을 경우 옆에 코멘트 넣으라고 하셨어요.
+[신지연] [오후 3:30] 제가 한거 참고해서 첨부 설명 써주세요 
+[신지연] [오후 5:44] <meta http-equiv="Refresh" content="0;url=../display/header.jsp?pgName=board">
+[동긔] [오후 6:18] 저 내일 학교를 가봐야해서 못올거같아용 ㅎ
+[신지연] [오후 6:19] 알겠어요
+--------------- 2019년 11월 7일 목요일 ---------------
+[신지연] [오전 11:56] PPT 수정 조금 됐어여
+[동긔] [오후 12:05] 넵 ~  ㅎ
+[권병준] [오후 12:05] 발표준비끝남
+[권병준] [오후 12:05] 화이팅
+[하동민] [오후 12:05] 오진짜요??
+[하동민] [오후 12:05] 오 축하드려요
+[신지연] [오후 12:05] ?ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ 동민이 준비 다 됐어??
+[신지연] [오후 12:05] ???
+[신지연] [오후 12:05] 난 모르는 일인데?ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+[하동민] [오후 12:05] 저도몰랐다가
+[하동민] [오후 12:06] 방금알았어요
+[하동민] [오후 12:06] 발표준비가 다끝난것을.
+[하동민] [오후 12:06] 이모티콘
+[동긔] [오후 12:06] ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+[신지연] [오후 12:06] 오늘 동규 빠진 점심회식임..
+[권병준] [오후 12:06] 와
+[권병준] [오후 12:06] 와와
+[하동민] [오후 12:06] 난 굶을게
+[신지연] [오후 12:07] 병준과 동민이가 그렇게 하재
+[하동민] [오후 12:07] 동규없는 점심은 아닌거같아
+[하동민] [오후 12:07] 난 굶어죽을게
+[동긔] [오후 12:07] ㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+[동긔] [오후 12:07] 마피아 이제ㅣ찾으면되는건가요?
+[권병준] [오후 12:07] 내일 프로젝트 2차 팀 짜서 오래
+[하동민] [오후 12:07] ㅋㅋㅋㅋㅋㅋㅋㅋ
+[권병준] [오후 12:07] 나 동규랑 팀하고 싶어
+[하동민] [오후 12:08] 전
+[하동민] [오후 12:08] 동긔랑 팀하고싶어요
+[권병준] [오후 12:08] 우와
+[신지연] [오후 12:08] ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ 정해져따 동규
+[신지연] [오후 12:08] 현지
+[신지연] [오후 12:08] 병준
+[신지연] [오후 12:08] 동민
+[신지연] [오후 12:08] 넷이서 한 조다
+[권병준] [오후 12:08] 아
+[신지연] [오후 12:08] 나에서 현지로만 바뀜
+[권병준] [오후 12:08] 안돼
+[권병준] [오후 12:09] 현지랑 동규랑 떨어져
+[하동민] [오후 12:09] 안돼
+[권병준] [오후 12:09] 붙어있으면 프로젝트 진행 안될듯
+[동긔] [오후 12:09] ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ 혼란스럽다
+[하동민] [오후 12:09] 담배펴
+[신지연] [오후 12:10] 잘 될거에여 동규 잘하고, 
+현지도 맡은거 집중력 있게 잘하고 ㅋㅋ
+암튼 난 안녕이야! 난 예지랑 하기로 했어여
+[권병준] [오후 12:10] 나도 예지랑 할래
+[하동민] [오후 12:10] 나도
+[하동민] [오후 12:10] 예지랑할래
+[권병준] [오후 12:10] ㅋㅋㅋㅋㅋㅋㅋ
+[하동민] [오후 12:10] 물타기 지려버리기
+[권병준] [오후 12:10] 나도 예지팀에 껴주세요
+[하동민] [오후 12:10] css 마스터 예지
+[신지연] [오후 12:10] css 안해 예지
+[권병준] [오후 12:10] css 초고수 예지
+[하동민] [오후 12:11] cs탄 마스터 예지
+[하동민] [오후 12:11] 동규야
+[동긔] [오후 12:11] ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ
+[하동민] [오후 12:11] 점심 뭐먹?
+[동긔] [오후 12:11] 봇듀오인가요
+[동긔] [오후 12:11] 호흡이잘맞네
+[동긔] [오후 12:11] 오는점심 굶입니다
+[동긔] [오후 12:11] 바로학교수업이 있거든요 촤하하
+[하동민] [오후 12:12] 나도 굶을게
+[권병준] [오후 12:12] 동민이 점심 금지
+[하동민] [오후 12:12] 동규 오전에 롤했다 한표
+[권병준] [오후 12:12] 수업시간에 롤했다 한표
+[하동민] [오후 12:12] 동규 골드티어로 떨어졌다 한표
+[동긔] [오후 12:29] ㅋㅋㅋㅋㅋㅋㅋㅋ 총 3표감사합니다 ㅋㅋ
+--------------- 2019년 11월 8일 금요일 ---------------
+[동긔] [오전 9:58] public List select_Name() {
+      List<String> list = new ArrayList<String>();
+      try {
+         conn = Singletone.getInstance().getConnection();
+         String sql = "select  * from facility where not name in ('부대시설','관광지')";
+         pstmt = conn.prepareStatement(sql);
+         rs = pstmt.executeQuery();
+         while(rs.next()) {
+            list.add(rs.getString("name")); 
+            
+         }
+      }
+      catch(Exception e) {
+         e.printStackTrace();
+      }
+      finally {   if(rs != null) try {rs.close();}catch(SQLException s) {s.printStackTrace();}
+      if(pstmt != null) try {pstmt.close();}catch(SQLException s) {s.printStackTrace();}
+      if(conn != null) try {conn.close();}catch(SQLException s) {s.printStackTrace();}
+      
+         
+      }
+      
+      return list;
+   }
+--------------- 2019년 11월 12일 화요일 ---------------
+[동긔] [오후 3:00] <Resource 
+       name="jdbc/xe" 
+       auth = "Container"
+       type="javax.sql.DataSource"
+       driverClassName="oracle.jdbc.driver.OracleDriver"
+       username="scott"
+       password="tiger"
+       loginTimeout="10"
+       maxWait="5000"
+       maxActive="30"
+       testOnBorrow="true"
+       url="jdbc:oracle:thin:@nullmaster.iptime.org:1521:XE"
+    />
+[하동민] [오후 3:59] nullmaster.iptime.org
+[신지연] [오후 4:05] 이게 모야?
+[권병준] [오후 4:09] 몰라도 돼요!
+[권병준] [오후 4:09] 비밀
+[신지연] [오후 4:09] ...........ㅋㅋㅋㅋㅋ 안궁금해여
+--------------- 2019년 11월 15일 금요일 ---------------
+[권병준] [오전 10:13] 동규야 왜 안와아아아아아
+[하동민] [오전 10:13] 동규씨 왜안와요 롤티어 떨어져서 다시 올리고있나요?
+[권병준] [오전 10:14] 동규씨!!
+
+[동긔] [오전 10:14] ㅋㅋㄱㅋㅋㅋ학교발표있습니다 ㅋㅋ
+[권병준] [오전 10:14] 발표 잘하길 바랄께
+[권병준] [오전 10:14] 기도할께!
+--------------- 2019년 11월 18일 월요일 ---------------
+[권병준] [오전 10:18] <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+      <property name="prefix" value="/WEB-INF/views/" />
+      <property name="suffix" value=".jsp" />
+   </bean>
+[권병준] [오후 12:00] <bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" 
+      destroy-method="close" 
+      p:driverClassName="oracle.jdbc.driver.OracleDriver"
+      p:url="jdbc:oracle:thin@nullmaster.iptime.org:1521:xe"
+      p:username="git02"
+      p:password="git02" />
+      
+   <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+      <property name="dataSource" ref="dataSource" />
+      <property name="configLocation" value="/WEB-INF/mybatis/mybatis-config.xml" />
+   </bean>
+   
+   <bean id="sqlSession" class="org.mybatis.spring.SqlSessionTemplate" destroy-method="clearCache">
+      <constructor-arg name="sqlSessionFactory" ref="sqlSessionFactory"/>
+   </bean>
+[하동민] [오후 2:57] @Controller
+@RequestMapping("/upload/")
+public class UploadAction {
+   @Autowired
+   private SqlSessionTemplate sqlSession = null;
+   //         세션템플리트는 DAO 객체라고 생각하면된다.
+   @RequestMapping("uploadForm.git")
+   public String form() {
+      
+      int count = (Integer)sqlSession.selectOne("test.userimgCount");
+      
+      
+      System.out.println(count);
+      return "/1118/uploadForm";
+   }
+
+   @RequestMapping("uploadPro.git")
+   public String Pro(MultipartHttpServletRequest request, UserimgDTO dto) {
+      int count = (Integer)sqlSession.selectOne("test.userimgCount");
+            
+      MultipartFile mf = request.getFile("save"); // 파라미터의 파일 정보
+      String orgname = mf.getOriginalFilename(); // 파일명
+      
+      String ext = orgname.substring(orgname.lastIndexOf("."));
+      
+      String sysname = "file_";
+      if(count == 0) {
+         sysname += "1";
+      }else {
+         int max = (Integer)sqlSession.selectOne("test.userimgNum");
+         sysname +=(max+1);
+      }
+      
+      sysname+=ext;
+      
+      String save_path = "c://save//";
+      
+      File copy = new File(save_path+orgname);
+      try {
+         mf.transferTo(copy);   // 파일복사(업로드 진행)
+      }catch (Exception e) {
+         e.printStackTrace();
+      }
+      dto.setOrgname(orgname);
+      dto.setSysname(sysname);
+      
+      sqlSession.insert("test.userimgInsert" , dto);
+      
+      return "/1118/uploadPro";
+   }
+   
+}
+--------------- 2019년 11월 26일 화요일 ---------------
+[하동민] [오후 6:02] http://www.fivetop.co.kr/asapro/board/04_sub03_05.htm

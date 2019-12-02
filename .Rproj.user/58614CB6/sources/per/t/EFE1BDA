@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574920952603.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2498159640",
+    "id" : "EFE1BDA",
+    "lastKnownWriteTime" : 1574988569,
+    "last_content_update" : 1574988569771,
+    "path" : "C:/R/01동적크롤링_실시간검색어_연관검색어.R",
+    "project_path" : "01동적크롤링_실시간검색어_연관검색어.R",
+    "properties" : {
+        "cursorPosition" : "0,0",
+        "scrollLine" : "0",
+        "tempName" : "Untitled2"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

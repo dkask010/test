@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574921110136.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2822310580",
+    "id" : "1A508A04",
+    "lastKnownWriteTime" : 1574921129,
+    "last_content_update" : 1574921129729,
+    "path" : "C:/R/01동적크롤링_네이버_로그인.R",
+    "project_path" : "01동적크롤링_네이버_로그인.R",
+    "properties" : {
+        "cursorPosition" : "25,14",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

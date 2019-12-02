@@ -1,0 +1,26 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1574922215535.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "230475264",
+    "id" : "B99EE576",
+    "lastKnownWriteTime" : 1574837628,
+    "last_content_update" : 1574837628,
+    "path" : "C:/R/01웹크롤링.R",
+    "project_path" : "01웹크롤링.R",
+    "properties" : {
+        "cursorPosition" : "32,27",
+        "scrollLine" : "0",
+        "tempName" : "Untitled1"
+    },
+    "read_only" : false,
+    "read_only_alternatives" : [
+    ],
+    "relative_order" : 6,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
